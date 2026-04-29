@@ -8,7 +8,7 @@ public class NetworkingManager : NetworkManager
     private static NetworkingManager singleton;
     public new static NetworkingManager Singleton => singleton;
 
-    [SerializeField] private int playerName;
+    public string PlayerName { get; private set; }
 
     private void Awake()
     {
@@ -20,12 +20,28 @@ public class NetworkingManager : NetworkManager
         singleton = this;
     }
 
-    private void Start() {
+    private void Start()
+    {
         OnServerStarted += Srvr_Started;
     }
 
     private void Srvr_Started()
     {
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+    }
+
+    public void UpdatePlayerName(string name)
+    {
+        PlayerName = name;
+    }
+
+    public NetPlayer GetPlayerByID(ulong id)
+    {
+        NetPlayer player = null;
+        if(ConnectedClients.TryGetValue(id, out var client))
+        {
+            player = client.PlayerObject.GetComponent<NetPlayer>();
+        }
+        return player;
     }
 }

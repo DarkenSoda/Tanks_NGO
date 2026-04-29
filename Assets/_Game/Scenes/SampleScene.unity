@@ -1904,6 +1904,7 @@ MonoBehaviour:
     OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
+  playerName: 0
 --- !u!4 &2009949078
 Transform:
   m_ObjectHideFlags: 0
