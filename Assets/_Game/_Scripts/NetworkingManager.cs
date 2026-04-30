@@ -8,7 +8,7 @@ public class NetworkingManager : NetworkManager
     private static NetworkingManager singleton;
     public new static NetworkingManager Singleton => singleton;
 
-    public string PlayerName { get; private set; }
+    public PlayerData PlayerData { get; private set; }
 
     private void Awake()
     {
@@ -30,9 +30,13 @@ public class NetworkingManager : NetworkManager
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
 
-    public void UpdatePlayerName(string name)
+    public void UpdatePlayerData(string name, TeamID teamID)
     {
-        PlayerName = name;
+        PlayerData = new PlayerData
+        {
+            PlayerName = name,
+            TeamID = teamID
+        };
     }
 
     public NetPlayer GetPlayerByID(ulong id)

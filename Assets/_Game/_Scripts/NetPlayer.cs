@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class NetPlayer : NetworkBehaviour
 {
     [SerializeField] private TextMeshProUGUI playerNameText;
-    private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
+    private NetworkVariable<PlayerData> playerData = new NetworkVariable<PlayerData>();
     private NetworkVariable<int> health = new NetworkVariable<int>();
 
     [SerializeField] private Transform cannonTransform;
@@ -26,7 +26,7 @@ public class NetPlayer : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        playerName.OnValueChanged += OnPlayerNameChanged;
+        playerData.OnValueChanged += OnPlayerDataChanged;
         health.OnValueChanged += OnHealthChanged;
 
         rb = GetComponent<Rigidbody>();
@@ -38,11 +38,11 @@ public class NetPlayer : NetworkBehaviour
 
         if (IsLocalPlayer)
         {
-            UpdateNameRpc(NetworkingManager.Singleton.PlayerName);
+            UpdateNameRpc(NetworkingManager.Singleton.PlayerData);
         }
         else
         {
-            playerNameText.text = playerName.Value.ToString();
+            playerNameText.text = playerData.Value.PlayerName.ToString();
         }
     
         OnHealthChanged(0, health.Value);
@@ -77,9 +77,9 @@ public class NetPlayer : NetworkBehaviour
         }
     }
 
-    private void OnPlayerNameChanged(FixedString32Bytes previousValue, FixedString32Bytes newValue)
+    private void OnPlayerDataChanged(PlayerData previousValue, PlayerData newValue)
     {
-        playerNameText.text = newValue.ToString();
+        playerNameText.text = newValue.PlayerName.ToString();
     }
 
     private void OnHealthChanged(int previousValue, int newValue)
@@ -88,9 +88,9 @@ public class NetPlayer : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    private void UpdateNameRpc(FixedString32Bytes newName)
+    private void UpdateNameRpc(PlayerData newData)
     {
-        playerName.Value = newName;
+        playerData.Value = newData;
     }
 
 
@@ -122,11 +122,11 @@ public class NetPlayer : NetworkBehaviour
 
         if(killer != null)
         {
-            Debug.Log($"{playerName.Value} was killed by {killer.playerName.Value}");
+            Debug.Log($"{playerData.Value.PlayerName} was killed by {killer.playerData.Value.PlayerName}");
         }
         else
         {
-            Debug.Log($"{playerName.Value} was killed");
+            Debug.Log($"{playerData.Value.PlayerName} was killed");
         }
     }
 }
