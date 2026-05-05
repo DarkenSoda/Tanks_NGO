@@ -4,7 +4,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 3f;
-    [SerializeField] private int damage = 20;
+    private int damage = 20;
 
     private Rigidbody rb;
     private ulong ownerID;
@@ -18,7 +18,11 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject, lifetime);
     }
 
-    public void SetOwner(ulong id) => ownerID = id;
+    public void SetOwner(ulong id, int dmg)
+    {
+        ownerID = id;
+        damage = dmg;
+    }
 
     void OnCollisionEnter(Collision collision)
     {

@@ -1,23 +1,41 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
-    public NetworkObject playerPrefab;
+    [Serializable]
+    public struct ClassPrefabMapping
+    {
+        public PlayerClass playerClass;
+        public NetworkObject prefab;
+    }
+
+    public List<ClassPrefabMapping> classPrefabs;
+    private Dictionary<PlayerClass, NetworkObject> classPrefabDict = new Dictionary<PlayerClass, NetworkObject>();
+
     public Transform[] spawnPoints;
     private int playerCount = 0;
 
+    private void Awake()
+    {
+        foreach (var mapping in classPrefabs)
+        {
+            classPrefabDict[mapping.playerClass] = mapping.prefab;
+        }
+    }
+
     private void Start()
     {
-        if (NetworkManager.Singleton.IsServer)
+        if (NetworkingManager.Singleton.IsServer)
         {
-            NetworkManager.Singleton.SceneManager.OnLoadComplete += SpawnNextPlayer;
+            NetworkingManager.Singleton.SceneManager.OnLoadComplete += SpawnNextPlayer;
 
-            if (NetworkManager.Singleton.IsHost)
+            if (NetworkingManager.Singleton.IsHost)
             {
-                SpawnNextPlayer(NetworkManager.Singleton.LocalClientId, "", LoadSceneMode.Single);
+                SpawnNextPlayer(NetworkingManager.Singleton.LocalClientId, "", LoadSceneMode.Single);
             }
         }
     }
@@ -31,7 +49,16 @@ public class GameplayManager : MonoBehaviour
         }
 
         Transform spawnPoint = spawnPoints[playerCount];
-        NetworkObject playerInstance = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+
+        PlayerClass selectedClass = NetworkingManager.Singleton.PlayerData.PlayerClass;
+
+        if (!classPrefabDict.TryGetValue(selectedClass, out NetworkObject prefabToSpawn))
+        {
+            Debug.LogError($"Prefab for class {selectedClass} not found in dictionary!");
+            return;
+        }
+
+        NetworkObject playerInstance = Instantiate(prefabToSpawn, spawnPoint.position, spawnPoint.rotation);
         playerInstance.SpawnAsPlayerObject(clientId);
         playerCount++;
     }

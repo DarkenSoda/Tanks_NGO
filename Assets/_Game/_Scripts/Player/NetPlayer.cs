@@ -10,6 +10,8 @@ public class NetPlayer : NetworkBehaviour
     private NetworkVariable<PlayerData> playerData = new NetworkVariable<PlayerData>();
     private NetworkVariable<int> health = new NetworkVariable<int>();
 
+    [SerializeField] private PlayerClassSO playerClassData;
+
     [SerializeField] private Transform cannonTransform;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private GameObject bulletPrefab;
@@ -19,6 +21,10 @@ public class NetPlayer : NetworkBehaviour
     [Header("Health")]
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private Image healthBarFill;
+
+    [Header("Team Visuals")]
+    [SerializeField] private Material redTeamMaterial;
+    [SerializeField] private Material blueTeamMaterial;
 
     private Rigidbody rb;
     private bool isDead = false;
@@ -31,20 +37,27 @@ public class NetPlayer : NetworkBehaviour
 
         rb = GetComponent<Rigidbody>();
 
+        if (IsLocalPlayer)
+        {
+            UpdatePlayerDataRpc(NetworkingManager.Singleton.PlayerData);
+        }
+        else
+        {
+            playerNameText.text = playerData.Value.PlayerName.ToString();
+            UpdateTeamColor(playerData.Value.TeamID);
+        }
+
+        if (playerClassData != null)
+        {
+            maxHealth = playerClassData.maxHealth;
+            moveSpeed = playerClassData.moveSpeed;
+        }
+
         if (IsServer)
         {
             health.Value = maxHealth;
         }
 
-        if (IsLocalPlayer)
-        {
-            UpdateNameRpc(NetworkingManager.Singleton.PlayerData);
-        }
-        else
-        {
-            playerNameText.text = playerData.Value.PlayerName.ToString();
-        }
-    
         OnHealthChanged(0, health.Value);
     }
 
@@ -80,6 +93,17 @@ public class NetPlayer : NetworkBehaviour
     private void OnPlayerDataChanged(PlayerData previousValue, PlayerData newValue)
     {
         playerNameText.text = newValue.PlayerName.ToString();
+        UpdateTeamColor(newValue.TeamID);
+    }
+
+    private void UpdateTeamColor(TeamID teamID)
+    {
+        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+        Material teamMaterial = teamID == TeamID.Red ? redTeamMaterial : blueTeamMaterial;
+        foreach (var renderer in renderers)
+        {
+            renderer.material = teamMaterial;
+        }
     }
 
     private void OnHealthChanged(int previousValue, int newValue)
@@ -88,7 +112,7 @@ public class NetPlayer : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    private void UpdateNameRpc(PlayerData newData)
+    private void UpdatePlayerDataRpc(PlayerData newData)
     {
         playerData.Value = newData;
     }
@@ -98,7 +122,7 @@ public class NetPlayer : NetworkBehaviour
     private void ShootRpc(Vector3 position, Quaternion rotation)
     {
         var bullet = Instantiate(bulletPrefab, position, rotation);
-        bullet.GetComponent<Bullet>().SetOwner(OwnerClientId);
+        bullet.GetComponent<Bullet>().SetOwner(OwnerClientId, playerClassData.damage);
     }
 
     public void TakeDamage(int damage, ulong attackerID)
@@ -112,7 +136,7 @@ public class NetPlayer : NetworkBehaviour
             KillPlayerRPC(attackerID);
         }
     }
-    
+
     [Rpc(SendTo.Everyone)]
     private void KillPlayerRPC(ulong killerID)
     {
@@ -120,13 +144,21 @@ public class NetPlayer : NetworkBehaviour
 
         var killer = NetworkingManager.Singleton.GetPlayerByID(killerID);
 
-        if(killer != null)
+        if (killer != null)
         {
-            Debug.Log($"{playerData.Value.PlayerName} was killed by {killer.playerData.Value.PlayerName}");
+            KillUIHandler.Singleton.DisplayKill(
+                killer.playerData.Value.PlayerName.ToString(),
+                killer.playerData.Value.TeamID,
+                playerData.Value.PlayerName.ToString(),
+                playerData.Value.TeamID
+            );
         }
         else
         {
-            Debug.Log($"{playerData.Value.PlayerName} was killed");
+            KillUIHandler.Singleton.DisplayKillUnknown(
+                playerData.Value.PlayerName.ToString(),
+                playerData.Value.TeamID
+            );
         }
     }
 }

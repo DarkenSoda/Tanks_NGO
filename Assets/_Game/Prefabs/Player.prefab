@@ -344,7 +344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3463806461
+  GlobalObjectIdHash: 487367863
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -417,6 +417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetPlayer
   ShowTopMostFoldoutHeaderGroup: 1
   playerNameText: {fileID: 6844637182544632413}
+  playerClassData: {fileID: 11400000, guid: 52553508b2cc36745bb866c05491b962, type: 2}
   cannonTransform: {fileID: 4947696605526157430}
   bulletSpawnPoint: {fileID: 1054613361946960199}
   bulletPrefab: {fileID: 7054851156505387279, guid: 59aa34d079fde094e992ba7b913527e2, type: 3}
@@ -424,6 +425,8 @@ MonoBehaviour:
   rotSpeed: 120
   maxHealth: 100
   healthBarFill: {fileID: 39371274297724853}
+  redTeamMaterial: {fileID: 2100000, guid: 7aa96886beaa02a43b6a065c54bad93e, type: 2}
+  blueTeamMaterial: {fileID: 2100000, guid: 3078a5dabf30eef46b8df02232ebbf1e, type: 2}
 --- !u!1 &3681042021759629734
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,19 +30,20 @@ public class NetworkingManager : NetworkManager
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
 
-    public void UpdatePlayerData(string name, TeamID teamID)
+    public void UpdatePlayerData(string name, TeamID teamID, PlayerClass playerClass)
     {
         PlayerData = new PlayerData
         {
             PlayerName = name,
-            TeamID = teamID
+            TeamID = teamID,
+            PlayerClass = playerClass
         };
     }
 
     public NetPlayer GetPlayerByID(ulong id)
     {
         NetPlayer player = null;
-        if(ConnectedClients.TryGetValue(id, out var client))
+        if (ConnectedClients.TryGetValue(id, out var client))
         {
             player = client.PlayerObject.GetComponent<NetPlayer>();
         }
