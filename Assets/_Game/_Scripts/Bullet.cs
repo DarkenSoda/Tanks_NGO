@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour
     {
         if(NetworkingManager.Singleton.IsServer)
         {
-            if(collision.gameObject.TryGetComponent<NetPlayer>(out NetPlayer player))
+            if(collision.gameObject.TryGetComponent(out NetPlayer player))
             {
                 player.TakeDamage(damage, ownerID);
             }

@@ -129,6 +129,12 @@ public class NetPlayer : NetworkBehaviour
     {
         if (!IsServer) return;
 
+        var attacker = NetworkingManager.Singleton.GetPlayerByID(attackerID);
+        if (attacker != null && attacker.playerData.Value.TeamID == playerData.Value.TeamID)
+        {
+            return;
+        }
+
         health.Value -= damage;
         if (health.Value <= 0)
         {
@@ -160,5 +166,7 @@ public class NetPlayer : NetworkBehaviour
                 playerData.Value.TeamID
             );
         }
+
+        gameObject.SetActive(false);
     }
 }

@@ -1,5 +1,6 @@
 public enum PlayerClass
 {
     Tank,
-    DPS
+    DPS,
+    Support
 }

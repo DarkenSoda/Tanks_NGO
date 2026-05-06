@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,7 @@ public class NetworkingManager : NetworkManager
     public new static NetworkingManager Singleton => singleton;
 
     public PlayerData PlayerData { get; private set; }
+    public Dictionary<ulong, PlayerClass> ClientClasses { get; private set; } = new Dictionary<ulong, PlayerClass>();
 
     private void Awake()
     {
@@ -22,7 +24,21 @@ public class NetworkingManager : NetworkManager
 
     private void Start()
     {
+        NetworkConfig.ConnectionApproval = true;
+        ConnectionApprovalCallback = ApprovalCheck;
         OnServerStarted += Srvr_Started;
+    }
+
+    private void ApprovalCheck(ConnectionApprovalRequest request, ConnectionApprovalResponse response)
+    {
+        response.Approved = true;
+        response.CreatePlayerObject = false;
+
+        if (request.Payload != null && request.Payload.Length > 0)
+        {
+            int classIndex = BitConverter.ToInt32(request.Payload, 0);
+            ClientClasses[request.ClientNetworkId] = (PlayerClass)classIndex;
+        }
     }
 
     private void Srvr_Started()
@@ -38,6 +54,9 @@ public class NetworkingManager : NetworkManager
             TeamID = teamID,
             PlayerClass = playerClass
         };
+
+        NetworkConfig.ConnectionData = BitConverter.GetBytes((int)playerClass);
+        ClientClasses[LocalClientId] = playerClass;
     }
 
     public NetPlayer GetPlayerByID(ulong id)

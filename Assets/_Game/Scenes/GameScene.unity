@@ -1432,11 +1432,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameplayManager
   classPrefabs:
   - playerClass: 1
-    prefab: {fileID: 177933393560279824, guid: 1a9caee3b748d42448bd6e2928b7b4a5, type: 3}
+    prefab: {fileID: 6408743633419628394, guid: 00ac418bde1cff84b8a81b53bec24390, type: 3}
   - playerClass: 0
     prefab: {fileID: 177933393560279824, guid: 1a9caee3b748d42448bd6e2928b7b4a5, type: 3}
-  redTeamMaterial: {fileID: 2100000, guid: 7aa96886beaa02a43b6a065c54bad93e, type: 2}
-  blueTeamMaterial: {fileID: 2100000, guid: 3078a5dabf30eef46b8df02232ebbf1e, type: 2}
+  - playerClass: 2
+    prefab: {fileID: 1120862390773634485, guid: 85deb036e0d88224d878dcb2ba811d79, type: 3}
   spawnPoints:
   - {fileID: 958074306}
   - {fileID: 52159988}

@@ -50,7 +50,11 @@ public class GameplayManager : MonoBehaviour
 
         Transform spawnPoint = spawnPoints[playerCount];
 
-        PlayerClass selectedClass = NetworkingManager.Singleton.PlayerData.PlayerClass;
+        PlayerClass selectedClass = PlayerClass.Tank;
+        if (NetworkingManager.Singleton.ClientClasses.TryGetValue(clientId, out PlayerClass clientClass))
+        {
+            selectedClass = clientClass;
+        }
 
         if (!classPrefabDict.TryGetValue(selectedClass, out NetworkObject prefabToSpawn))
         {
