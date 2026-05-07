@@ -41,7 +41,7 @@ public class KillUIHandler : MonoBehaviour
         Destroy(killMessageInstance, messageDuration);
     }
 
-    private string TeamIDToHex(TeamID teamID)
+    public string TeamIDToHex(TeamID teamID)
     {
         Color color = teamID == TeamID.Red ? redTeamColor : blueTeamColor;
         return "#" + ColorUtility.ToHtmlStringRGB(color);

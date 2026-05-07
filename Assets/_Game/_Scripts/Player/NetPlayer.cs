@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,10 +12,12 @@ public class NetPlayer : NetworkBehaviour
     [SerializeField] private PlayerClassSO playerClassData;
 
     [SerializeField] private Transform cannonTransform;
+    [SerializeField] private Transform bodyTransform;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float rotSpeed = 5f;
+    [SerializeField] private float rotSpeed = 120f;
+    [SerializeField] private float bodyRotSpeed = 360f;
 
     [Header("Health")]
     [SerializeField] private int maxHealth = 100;
@@ -29,6 +30,8 @@ public class NetPlayer : NetworkBehaviour
     private Rigidbody rb;
     private bool isDead = false;
 
+    public static event System.Action<ulong> OnDeathEvent;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -40,6 +43,7 @@ public class NetPlayer : NetworkBehaviour
         if (IsLocalPlayer)
         {
             UpdatePlayerDataRpc(NetworkingManager.Singleton.PlayerData);
+            Camera.main.GetComponent<CameraFollow>().target = bodyTransform;
         }
         else
         {
@@ -73,6 +77,13 @@ public class NetPlayer : NetworkBehaviour
         // Movement
         Vector3 movement = new Vector3(x, 0, z) * (moveSpeed * Time.deltaTime);
         rb.Move(rb.position + movement, rb.rotation);
+
+        // Body Rotation
+        if (movement != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movement);
+            bodyTransform.rotation = Quaternion.RotateTowards(bodyTransform.rotation, targetRotation, bodyRotSpeed * Time.deltaTime);
+        }
 
         // Cannon Rotation
         if (right || left)
@@ -147,6 +158,8 @@ public class NetPlayer : NetworkBehaviour
     private void KillPlayerRPC(ulong killerID)
     {
         isDead = true;
+
+        OnDeathEvent?.Invoke(OwnerClientId);
 
         var killer = NetworkingManager.Singleton.GetPlayerByID(killerID);
 

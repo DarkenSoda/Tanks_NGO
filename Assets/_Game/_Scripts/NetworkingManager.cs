@@ -10,7 +10,7 @@ public class NetworkingManager : NetworkManager
     public new static NetworkingManager Singleton => singleton;
 
     public PlayerData PlayerData { get; private set; }
-    public Dictionary<ulong, PlayerClass> ClientClasses { get; private set; } = new Dictionary<ulong, PlayerClass>();
+    public Dictionary<ulong, PlayerData> ClientData { get; private set; } = new Dictionary<ulong, PlayerData>();
 
     private void Awake()
     {
@@ -36,14 +36,18 @@ public class NetworkingManager : NetworkManager
 
         if (request.Payload != null && request.Payload.Length > 0)
         {
-            int classIndex = BitConverter.ToInt32(request.Payload, 0);
-            ClientClasses[request.ClientNetworkId] = (PlayerClass)classIndex;
+            var reader = new FastBufferReader(request.Payload, Unity.Collections.Allocator.Temp);
+            using (reader)
+            {
+                reader.ReadNetworkSerializable(out PlayerData clientData);
+                ClientData[request.ClientNetworkId] = clientData;
+            }
         }
     }
 
     private void Srvr_Started()
     {
-        SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("ShowDown_Night", LoadSceneMode.Single);
     }
 
     public void UpdatePlayerData(string name, TeamID teamID, PlayerClass playerClass)
@@ -55,8 +59,13 @@ public class NetworkingManager : NetworkManager
             PlayerClass = playerClass
         };
 
-        NetworkConfig.ConnectionData = BitConverter.GetBytes((int)playerClass);
-        ClientClasses[LocalClientId] = playerClass;
+        var writer = new FastBufferWriter(256, Unity.Collections.Allocator.Temp);
+        using (writer)
+        {
+            writer.WriteNetworkSerializable(PlayerData);
+            NetworkConfig.ConnectionData = writer.ToArray();
+        }
+        ClientData[LocalClientId] = PlayerData;
     }
 
     public NetPlayer GetPlayerByID(ulong id)
