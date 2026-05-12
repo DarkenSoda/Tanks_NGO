@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7186865179818098519}
   - component: {fileID: 2915707947305341742}
   - component: {fileID: 1597902833873610108}
+  - component: {fileID: 6718705399917236498}
   m_Layer: 0
   m_Name: Barrier
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.0184994, y: 0, z: 9.14591}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -155,3 +156,122 @@ MonoBehaviour:
   lifetime: 10
   spawnSound: {fileID: 8300000, guid: a08cad0b76716564b94b955e45f9a2d4, type: 3}
   destroySound: {fileID: 8300000, guid: bc82bc7dbb8e8944990449d4f1c07f8e, type: 3}
+--- !u!114 &6718705399917236498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3842089481253710081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cc6819e64e4c44beb63ea2ef45e1a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LitMotion.Animation::LitMotion.Animation.LitMotionAnimation
+  autoPlayMode: 2
+  animationMode: 1
+  components:
+  - rid: 8869818864884514894
+  - rid: 8869818864884514895
+  - rid: 8869818864884514896
+  playOnAwake: 1
+  version: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 8869818864884514894
+      type: {class: TransformScaleAnimation, ns: LitMotion.Animation.Components, asm: LitMotion.Animation}
+      data:
+        displayName: Scale
+        enabled: 1
+        target: {fileID: 3621058177835900256}
+        settings:
+          startValue: {x: 0, y: 0, z: 0}
+          endValue: {x: 20, y: 20, z: 20}
+          duration: 0.5
+          ease: 18
+          customEaseCurve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          delay: 0
+          delayType: 0
+          loops: 1
+          loopType: 0
+          cancelOnError: 0
+          skipValuesDuringDelay: 0
+          immediateBind: 0
+          schedulerType: 0
+          additionalSettings: 1
+        relative: 0
+    - rid: 8869818864884514895
+      type: {class: DelayComponent, ns: LitMotion.Animation.Components, asm: LitMotion.Animation}
+      data:
+        displayName: Delay
+        enabled: 1
+        delay: 9
+    - rid: 8869818864884514896
+      type: {class: TransformScaleAnimation, ns: LitMotion.Animation.Components, asm: LitMotion.Animation}
+      data:
+        displayName: Scale
+        enabled: 1
+        target: {fileID: 3621058177835900256}
+        settings:
+          startValue: {x: 20, y: 20, z: 20}
+          endValue: {x: 0, y: 0, z: 0}
+          duration: 0.5
+          ease: 18
+          customEaseCurve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          delay: 0
+          delayType: 0
+          loops: 1
+          loopType: 0
+          cancelOnError: 0
+          skipValuesDuringDelay: 0
+          immediateBind: 0
+          schedulerType: 0
+          additionalSettings: 0
+        relative: 0
