@@ -187,3 +187,4 @@ MonoBehaviour:
   damage: 75
   spawnSound: {fileID: 8300000, guid: 9ff179441c1e3d4489f597a082c9ae42, type: 3}
   explodeSound: {fileID: 8300000, guid: 38bffc5b55f27af4c8c1ccce6bd7a381, type: 3}
+  explodeVFX: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}

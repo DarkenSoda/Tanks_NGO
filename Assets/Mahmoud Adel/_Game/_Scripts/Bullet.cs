@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 3f;
     [SerializeField] private AudioClip hitSound;
+    [SerializeField] private GameObject hitVFX;
 
     private int damage = 20;
     private Vector3 spawnPoint;
@@ -41,6 +42,10 @@ public class Bullet : MonoBehaviour
         if (hitSound != null)
         {
             AudioManager.Instance.PlaySFXClip(hitSound, transform);
+        }
+        if (hitVFX != null)
+        {
+            VFXManager.Instance.PlayVFX(hitVFX, transform.position);
         }
         Destroy(gameObject);
     }

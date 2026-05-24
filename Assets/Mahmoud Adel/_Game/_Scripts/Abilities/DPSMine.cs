@@ -9,6 +9,7 @@ public class DPSMine : NetworkBehaviour
 
     [SerializeField] private AudioClip spawnSound;
     [SerializeField] private AudioClip explodeSound;
+    [SerializeField] private GameObject explodeVFX;
 
     public override void OnNetworkSpawn()
     {
@@ -41,6 +42,10 @@ public class DPSMine : NetworkBehaviour
         if (explodeSound != null)
         {
             AudioManager.Instance.PlaySFXClip(explodeSound, transform);
+        }
+        if (explodeVFX != null)
+        {
+            VFXManager.Instance.PlayVFX(explodeVFX, transform.position);
         }
 
         if (IsServer)

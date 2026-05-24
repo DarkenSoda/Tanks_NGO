@@ -10,6 +10,7 @@ public class HealPack : NetworkBehaviour
 
     [SerializeField] private AudioClip spawnSound;
     [SerializeField] private AudioClip healSound;
+    [SerializeField] private GameObject healVFX;
 
     public override void OnNetworkSpawn()
     {
@@ -42,6 +43,10 @@ public class HealPack : NetworkBehaviour
         if (healSound != null)
         {
             AudioManager.Instance.PlaySFXClip(healSound, transform);
+        }
+        if (healVFX != null)
+        {
+            VFXManager.Instance.PlayVFX(healVFX, transform.position);
         }
 
         if (IsServer)

@@ -156,3 +156,4 @@ MonoBehaviour:
   speed: 20
   lifetime: 3
   hitSound: {fileID: 8300000, guid: e9d442b720d955e4c8e06a3b89a5880d, type: 3}
+  hitVFX: {fileID: 1429954232896169633, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}

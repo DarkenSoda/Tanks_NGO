@@ -97,6 +97,7 @@ MonoBehaviour:
   healAmount: 25
   spawnSound: {fileID: 8300000, guid: e9ee6f430b24f29469866946844720a4, type: 3}
   healSound: {fileID: 8300000, guid: bc82bc7dbb8e8944990449d4f1c07f8e, type: 3}
+  healVFX: {fileID: 888444077320411739, guid: 0c2509361b13505428ce788b7f846686, type: 3}
 --- !u!1001 &9136111477918710383
 PrefabInstance:
   m_ObjectHideFlags: 0

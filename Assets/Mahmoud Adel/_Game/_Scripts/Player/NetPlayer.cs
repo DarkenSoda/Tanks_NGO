@@ -40,6 +40,9 @@ public class NetPlayer : NetworkBehaviour
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip deathSound;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject deathVFX;
+
     public static event System.Action<ulong> OnDeathEvent;
 
     public override void OnNetworkSpawn()
@@ -241,6 +244,10 @@ public class NetPlayer : NetworkBehaviour
         if (deathSound != null)
         {
             AudioManager.Instance.PlaySFXClip(deathSound, transform);
+        }
+        if (deathVFX != null)
+        {
+            VFXManager.Instance.PlayVFX(deathVFX, transform.position);
         }
 
         OnDeathEvent?.Invoke(OwnerClientId);
